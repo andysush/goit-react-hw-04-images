@@ -63,7 +63,7 @@ export default function App() {
     <div>
       <SearchBar onSubmit={handleSubmit}></SearchBar>
       {isEmpty && (
-        <span className={css.text}>Sorry. There are no images ... 😭</span>
+        <span className={css.text}>Sorry. There are no images found... 😭</span>
       )}
       {err && <span className={css.text}>Sorry. {err}😭</span>}
       <ImgGallery imagesData={imagesData} onModalOpen={onModalOpen} />
