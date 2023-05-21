@@ -1,104 +1,82 @@
-import { Component } from 'react';
-import { SearchBar } from '../Searchbar/Searchbar';
+import { useEffect, useState } from 'react';
+import SearchBar from '../Searchbar/Searchbar';
 import * as ImageService from 'services/pixabay';
 import { ImgGallery } from '../ImageGallery/ImageGallery';
 import { Button } from '../Button/Button';
 import { Loader } from '../Loader/Loader';
-import { Modal } from '../Modal/Modal';
+import Modal from '../Modal/Modal';
 import css from './App.module.css';
 
-export class App extends Component {
-  state = {
-    value: '',
-    page: 1,
-    imagesData: [],
-    showBtn: false,
-    isLoading: false,
-    isOpenModal: false,
-    err: '',
-    isEmpty: false,
-    largeImageURL: '',
-    tags: '',
+export default function App() {
+  const [value, setValue] = useState('');
+  const [page, setPage] = useState(1);
+  const [imagesData, setImagesData] = useState([]);
+  const [showBtn, setShowBtn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [err, setErr] = useState('');
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [largeImageURL, setLargeImageURL] = useState('');
+  const [tags, setTags] = useState('');
+
+  useEffect(() => {
+    if (value === '') return;
+    setIsLoading(true);
+    ImageService.getImages(value, page)
+      .then(({ hits, totalHits }) => {
+        if (!hits.length) {
+          setIsEmpty(true);
+          return;
+        }
+        setImagesData(prevImagesData => [...prevImagesData, ...hits]);
+        setShowBtn(page < Math.ceil(totalHits / ImageService.perPage));
+      })
+      .catch(err => setErr(err.message))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [page, value]);
+
+  const handleSubmit = value => {
+    setValue(value);
+    setPage(1);
+    setImagesData([]);
+    setErr('');
+    setIsEmpty(false);
+    setShowBtn(false);
+  };
+  const loadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  componentDidUpdate = (prevProps, prevState) => {
-    const { value, page } = this.state;
-
-    if (prevState.value !== value || prevState.page !== page) {
-      this.setState({ isLoading: true });
-      ImageService.getImages(value, page)
-        .then(({ hits, totalHits }) => {
-          if (!hits.length) {
-            this.setState({ isEmpty: true });
-            return;
-          }
-          this.setState(prevState => ({
-            imagesData: [...prevState.imagesData, ...hits],
-            showBtn: page < Math.ceil(totalHits / ImageService.perPage),
-          }));
-        })
-        .catch(err => this.setState({ err: err.message }))
-        .finally(() => {
-          this.setState({ isLoading: false });
-        });
-    }
+  const onModalOpen = (largeImageURL, tags) => {
+    setIsOpenModal(true);
+    setLargeImageURL(largeImageURL);
+    setTags(tags);
   };
 
-  handleSubmit = value => {
-    this.setState({
-      value,
-      page: 1,
-      imagesData: [],
-      err: '',
-      isEmpty: false,
-      showBtn: false,
-    });
+  const onModalClose = () => {
+    setIsOpenModal(false);
   };
 
-  loadMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
-  };
-
-  onModalOpen = (largeImageURL, tags) => {
-    this.setState({
-      isOpenModal: true,
-      largeImageURL: largeImageURL,
-      tags: tags,
-    });
-  };
-  onModalClose = () => {
-    this.setState({ isOpenModal: false });
-  };
-
-  render() {
-    const {
-      imagesData,
-      showBtn,
-      isLoading,
-      err,
-      isEmpty,
-      isOpenModal,
-      largeImageURL,
-      tags,
-    } = this.state;
-    return (
-      <div>
-        <SearchBar onSubmit={this.handleSubmit}></SearchBar>
-        {isEmpty && (
-          <span className={css.text}>Sorry. There are no images ... 😭</span>
-        )}
-        {err && <span className={css.text}>Sorry. {err}😭</span>}
-        <ImgGallery imagesData={imagesData} onModalOpen={this.onModalOpen} />
-        {showBtn && <Button onClick={this.loadMore}></Button>}
-        {isLoading && <Loader />}
-        {isOpenModal && (
-          <Modal
-            largeImageURL={largeImageURL}
-            tags={tags}
-            onModalClose={this.onModalClose}
-          />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div>
+      <SearchBar onSubmit={handleSubmit}></SearchBar>
+      {isEmpty && (
+        <span className={css.text}>Sorry. There are no images ... 😭</span>
+      )}
+      {err && <span className={css.text}>Sorry. {err}😭</span>}
+      <ImgGallery imagesData={imagesData} onModalOpen={onModalOpen} />
+      {showBtn && <Button onClick={loadMore}></Button>}
+      {isLoading && <Loader />}
+      {isOpenModal && (
+        <Modal
+          largeImageURL={largeImageURL}
+          tags={tags}
+          onModalClose={onModalClose}
+        />
+      )}
+    </div>
+  );
 }
+// }
