@@ -1,7 +1,13 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { ReactComponent as SearchIcon } from '../../icons/image-search-min.svg';
-import css from './SearchBar.module.css';
+
+import {
+  SearchHeader,
+  SearchForm,
+  SearchBtn,
+  SearchInput,
+} from './SearchBar.styled';
 
 export default function SearchBar({ onSubmit }) {
   const [value, setValue] = useState('');
@@ -20,14 +26,13 @@ export default function SearchBar({ onSubmit }) {
 
   return (
     <>
-      <header className={css.searchbar}>
-        <form className={css.form} onSubmit={handleSubmit}>
-          <button type="submit" className={css.button}>
+      <SearchHeader>
+        <SearchForm onSubmit={handleSubmit}>
+          <SearchBtn type="submit">
             <SearchIcon />
-          </button>
+          </SearchBtn>
 
-          <input
-            className={css.input}
+          <SearchInput
             type="text"
             autoComplete="off"
             autoFocus
@@ -35,8 +40,8 @@ export default function SearchBar({ onSubmit }) {
             onChange={handleChange}
             value={value}
           />
-        </form>
-      </header>
+        </SearchForm>
+      </SearchHeader>
     </>
   );
 }

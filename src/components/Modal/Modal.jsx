@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import css from './Modal.module.css';
+import { Overlay, ModalWindow } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
 
@@ -24,11 +24,11 @@ export default function Modal({ largeImageURL, tags, onModalClose }) {
 
   return createPortal(
     <>
-      <div className={css.overlay} onClick={handleCloseBackdrop}>
-        <div className={css.modal}>
+      <Overlay onClick={handleCloseBackdrop}>
+        <ModalWindow>
           <img src={largeImageURL} alt={tags} />
-        </div>
-      </div>
+        </ModalWindow>
+      </Overlay>
     </>,
     modalRoot
   );

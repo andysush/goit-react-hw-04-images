@@ -5,7 +5,7 @@ import { ImgGallery } from '../ImageGallery/ImageGallery';
 import { Button } from '../Button/Button';
 import { Loader } from '../Loader/Loader';
 import Modal from '../Modal/Modal';
-import css from './App.module.css';
+import { ErrorText } from './App.styled';
 
 export default function App() {
   const [value, setValue] = useState('');
@@ -62,10 +62,8 @@ export default function App() {
   return (
     <div>
       <SearchBar onSubmit={handleSubmit}></SearchBar>
-      {isEmpty && (
-        <span className={css.text}>Sorry. There are no images found... 😭</span>
-      )}
-      {err && <span className={css.text}>Sorry. {err}😭</span>}
+      {isEmpty && <ErrorText>Sorry. There are no images found... 😭</ErrorText>}
+      {err && <ErrorText>Sorry. {err}😭</ErrorText>}
       <ImgGallery imagesData={imagesData} onModalOpen={onModalOpen} />
       {showBtn && <Button onClick={loadMore}></Button>}
       {isLoading && <Loader />}

@@ -1,4 +1,6 @@
-.overlay {
+import styled from '@emotion/styled';
+
+export const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -9,11 +11,9 @@
   align-items: center;
   z-index: 1200;
   background-color: rgba(0, 0, 0, 0.8);
-}
+`;
 
-.modal {
+export const ModalWindow = styled.div`
   max-width: calc(100vw - 20%);
   max-height: calc(100vh - 10%);
-  /* max-width: calc(100vw - 72px);
-  max-height: calc(100vh - 36px); */
-}
+`;

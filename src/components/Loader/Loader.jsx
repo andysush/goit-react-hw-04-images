@@ -1,9 +1,9 @@
 import { MagnifyingGlass } from 'react-loader-spinner';
-import css from './Loader.module.css';
+import { Backdrop } from './Loader.styled';
 
 export const Loader = () => {
   return (
-    <div className={css.backdrop}>
+    <Backdrop>
       <MagnifyingGlass
         visible={true}
         height="80"
@@ -14,6 +14,6 @@ export const Loader = () => {
         glassColor="#c0efff"
         color="#2a15eb"
       />
-    </div>
+    </Backdrop>
   );
 };

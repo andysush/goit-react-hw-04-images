@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
-import css from './ImageGalleryItem.module.css';
+import { GalleryItem, Image } from './ImageGalleryItem.styled';
 
 export const ImgItem = ({ tags, webformatURL, largeImageURL, onModalOpen }) => {
   return (
-    <div
-      className={css.gallery__item}
+    <GalleryItem
       onClick={() => {
         onModalOpen(largeImageURL, tags);
       }}
     >
-      <img className={css.gallery__image} src={webformatURL} alt={tags} />
-    </div>
+      <Image src={webformatURL} alt={tags} />
+    </GalleryItem>
   );
 };
 

@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import { ImgItem } from 'components/ImageGalleryItem/ImageGalleryItem';
-import css from './ImageGallery.module.css';
-
+import { GalleryList } from './ImageGallery.styled';
 export const ImgGallery = ({ imagesData, onModalOpen }) => {
   return (
-    <ul className={css.gallery}>
+    <GalleryList>
       {imagesData.map(({ id, tags, webformatURL, largeImageURL }) => {
         return (
           <ImgItem
@@ -16,7 +15,7 @@ export const ImgGallery = ({ imagesData, onModalOpen }) => {
           ></ImgItem>
         );
       })}
-    </ul>
+    </GalleryList>
   );
 };
 
